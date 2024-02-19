@@ -1,0 +1,9 @@
+body {
+    margin: 0;
+    background-color: #04090e;
+    color: white;
+}
+
+body * {
+    margin: 0;
+}

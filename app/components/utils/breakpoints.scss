@@ -1,0 +1,69 @@
+$breakpoints: (
+    sm: (
+        min: 576px,
+        max: 575.98px,
+    ),
+    md: (
+        min: 1200px,
+        max: 1199.98px,
+    ),
+
+    lg: (
+        min: 1600px,
+        max: 1599.98px,
+    ),
+    xl: (
+        min: 10000px,
+        max: 9999.98px,
+    ),
+    prt: (),
+);
+
+@mixin breakpoint($breakpoint, $direction: max) {
+    @if $breakpoint == prt {
+        @media (orientation: portrait) {
+            @content;
+        }
+    }
+    $breakpoint-values: map-get($breakpoints, $breakpoint);
+    $breakpoint-min: map-get($breakpoint-values, min);
+    $breakpoint-max: map-get($breakpoint-values, max);
+
+    //check if we are writing styles for larger or smaller screens
+    @if $direction == min {
+        @if $breakpoint == md {
+            @media (min-width: map-get(map-get($breakpoints,sm),min)) and (orientation: landscape) {
+                @content;
+            }
+        } @else {
+            @media (min-width: $breakpoint-min) {
+                @content;
+            }
+        }
+    } @else {
+        @if $breakpoint == md {
+            @media (max-width: $breakpoint-max) and (orientation: portrait) {
+                @content;
+            }
+        } @else {
+            @media (max-width: $breakpoint-max) {
+                @content;
+            }
+        }
+    }
+}
+
+@mixin respond($property, $sm, $md: $sm, $lg: $md, $xl: $lg) {
+    @include breakpoint(xl) {
+        #{$property}: $xl;
+    }
+    @include breakpoint(lg) {
+        #{$property}: $lg;
+    }
+    @include breakpoint(md) {
+        #{$property}: $md;
+    }
+    @include breakpoint(sm) {
+        #{$property}: $sm;
+    }
+}
