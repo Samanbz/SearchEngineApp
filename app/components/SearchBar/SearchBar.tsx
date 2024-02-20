@@ -56,12 +56,13 @@ const SearchBar = ({
 
     const fetchNamedEntities = async (results: SearchResult[]) => {
         const urls = results.map((result) => result.url);
+        const top_urls = urls.slice(0,10);
         try {
             const response = await axios.post(
                 process.env.NEXT_PUBLIC_API_URL + "/analysis",
                 {
                     param: { language: "en" },
-                    urls: urls,
+                    urls: top_urls,
                 }
             );
             const namedEntities = response.data.named_entities;
