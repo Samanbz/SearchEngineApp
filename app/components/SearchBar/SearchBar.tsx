@@ -56,7 +56,7 @@ const SearchBar = ({
 
     const fetchNamedEntities = async (results: SearchResult[]) => {
         const urls = results.map((result) => result.url);
-        const top_urls = urls.slice(0,10);
+        const top_urls = urls.slice(0,7);
         try {
             const response = await axios.post(
                 process.env.NEXT_PUBLIC_API_URL + "/analysis",
