@@ -10,18 +10,22 @@ export default function Home() {
     const [searchResults, setSearchResults] = useState([] as SearchResult[]);
     const [namedEntities, setNamedEntities] = useState([] as NamedEntity[]);
     const [summary, setSummary] = useState("");
+    const [loading, setLoading] = useState(false);
     return (
         <div className={styles.container}>
             <SearchBar
                 setSearchResults={setSearchResults}
                 setNamedEntities={setNamedEntities}
                 setSummary={setSummary}
+                setLoading={setLoading}
+                loading={loading}
             />
 
             <SearchResultList
                 searchResults={searchResults}
                 namedEntities={namedEntities}
                 summary={summary}
+                loading={loading}
             />
         </div>
     );

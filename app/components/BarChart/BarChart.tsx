@@ -89,7 +89,7 @@ const BarChartComponent = ({
                 />
                 <Bar
                     dataKey="frequency"
-                    activeBar={<Rectangle fill="pink" stroke="blue" />}
+                    activeBar={<Rectangle fill="#f1faee" stroke="#000000" />}
                 >
                     {data.map(
                         ({

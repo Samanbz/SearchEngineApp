@@ -5,19 +5,24 @@ import axios from "axios";
 import SearchResult from "../types/SearchResult";
 import MeshBackground from "../MeshBackground/MeshBackground";
 import NamedEntity from "../types/NamedEntity";
-
+import { motion } from "framer-motion";
 const SearchBar = ({
     setSearchResults,
     setNamedEntities,
     setSummary,
+    setLoading,
+    loading,
 }: {
     setSearchResults: Dispatch<SetStateAction<SearchResult[]>>;
     setNamedEntities: Dispatch<SetStateAction<NamedEntity[]>>;
     setSummary: Dispatch<SetStateAction<string>>;
+    setLoading: Dispatch<SetStateAction<boolean>>;
+    loading: boolean;
 }) => {
     const [searchQuery, setSearchQuery] = useState("");
 
     const fetchData = async () => {
+        setLoading(true);
         setSummary("");
         setNamedEntities([]);
         setSearchResults([]);
@@ -29,6 +34,7 @@ const SearchBar = ({
             "this happened that happend and he did this and she did that.";
         setSummary(summary);
         const namedEntities = await fetchNamedEntities(results);
+        setLoading(false);
         setNamedEntities(namedEntities);
     };
 
@@ -56,7 +62,7 @@ const SearchBar = ({
 
     const fetchNamedEntities = async (results: SearchResult[]) => {
         const urls = results.map((result) => result.url);
-        const top_urls = urls.slice(0,7);
+        const top_urls = urls.slice(0, 7);
         try {
             const response = await axios.post(
                 process.env.NEXT_PUBLIC_API_URL + "/analysis",
@@ -91,7 +97,14 @@ const SearchBar = ({
     };
 
     return (
-        <div className={styles.supercontainer}>
+        <div
+            className={styles.supercontainer}
+            style={
+                loading
+                    ? { opacity: 0.6, cursor: "not-allowed" }
+                    : { opacity: 1, cursor: "pointer" }
+            }
+        >
             <MeshBackground
                 bgcolor={"#ff8fab"}
                 colors={["#8338ec", "#ff006e", "#a30051"]}
@@ -102,6 +115,7 @@ const SearchBar = ({
                     colors={["#02040f", "#02110d", "#0b132b"]}
                 />
                 <input
+                    disabled={loading}
                     type="text"
                     className={styles.search_bar}
                     placeholder="Search News..."
@@ -110,7 +124,13 @@ const SearchBar = ({
                 />
                 <button
                     className={styles.submit_button}
+                    disabled={loading}
                     onClick={() => fetchData()}
+                    style={
+                        loading
+                            ? { opacity: 0.6, cursor: "not-allowed" }
+                            : { opacity: 1, cursor: "pointer" }
+                    }
                 >
                     Search
                 </button>

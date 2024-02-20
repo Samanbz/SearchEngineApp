@@ -1,19 +1,22 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import SearchResult from "../types/SearchResult";
 import SearchResultItem from "../SearchResultItem/SearchResultItem";
 import styles from "./SearchResultList.module.scss";
 import NamedEntity from "../types/NamedEntity";
 import BarChartComponent from "../BarChart/BarChart";
 import { motion } from "framer-motion";
+
 const SearchResultList = ({
     searchResults,
     namedEntities,
     summary,
+    loading,
 }: {
     searchResults: SearchResult[];
     namedEntities: NamedEntity[];
     summary: string;
+    loading: boolean;
 }) => {
     return (
         <div className={styles.container}>
@@ -42,7 +45,6 @@ const SearchResultList = ({
                             let coef = index + 1;
                             let delay =
                                 Math.fround((2 + coef * 0.2) * 100) / 100;
-                            console.log(`${index}, ${word}: ${delay}`);
                             return (
                                 <motion.span
                                     key={index}
@@ -65,6 +67,15 @@ const SearchResultList = ({
             </div>
             <div className={styles.chart_container}>
                 <BarChartComponent data={namedEntities} />
+                <motion.div
+                    className={styles.loader_container}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: loading ? 1 : 0 }}
+                >
+                    <div className={styles.loader} />
+                    <div className={styles.loader} />
+                    <div className={styles.loader} />
+                </motion.div>
             </div>
             {searchResults &&
                 searchResults.map((result, index) => (
