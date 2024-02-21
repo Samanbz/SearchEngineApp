@@ -1,6 +1,17 @@
 @import "../utils/breakpoints.scss";
 
-.supercontainer {
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.error_message {
+    padding: 0 2%;
+    opacity: 0.8;
+    user-select: none;
+    color: #e0e1dd;
+}
+.bg_container {
     width: 100%;
     margin-top: 20%;
     display: flex;
@@ -22,7 +33,7 @@
         z-index: -6;
     }
 }
-.container {
+.search_bar_container {
     width: 100%;
     margin: 0.1rem;
     display: flex;
