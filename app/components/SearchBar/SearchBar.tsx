@@ -6,6 +6,7 @@ import SearchResult from "../types/SearchResult";
 import MeshBackground from "../MeshBackground/MeshBackground";
 import NamedEntity from "../types/NamedEntity";
 import { motion } from "framer-motion";
+
 const SearchBar = ({
     setSearchResults,
     setNamedEntities,
@@ -20,6 +21,12 @@ const SearchBar = ({
     loading: boolean;
 }) => {
     const [searchQuery, setSearchQuery] = useState("");
+
+    const [responseStati, setResponseStati] = useState({
+        searchResults: 0,
+        namedEntities: 0,
+        summary: 0,
+    });
 
     const fetchData = async () => {
         setLoading(true);
@@ -36,6 +43,8 @@ const SearchBar = ({
         const namedEntities = await fetchNamedEntities(results);
         setLoading(false);
         setNamedEntities(namedEntities);
+
+        console.log(responseStati);
     };
 
     const fetchSummary = async (results: SearchResult[]) => {
@@ -50,10 +59,13 @@ const SearchBar = ({
                     topic: searchQuery,
                 }
             );
+
             const summary = response.data.summary;
+
             if (!summary) return;
             setSearchQuery("");
-            console.log(summary);
+            setResponseStati((prev) => ({ ...prev, summary: response.status }));
+
             return summary;
         } catch (error) {
             throw error;
@@ -71,8 +83,15 @@ const SearchBar = ({
                     urls: top_urls,
                 }
             );
+
             const namedEntities = response.data.named_entities;
+
             if (!namedEntities) return;
+
+            setResponseStati((prev) => ({
+                ...prev,
+                namedEntities: response.status,
+            }));
 
             return namedEntities.length > 30
                 ? namedEntities.slice(0, 30)
@@ -84,13 +103,19 @@ const SearchBar = ({
 
     const fetchSearchResults = async () => {
         try {
-            const results = await axios.get(
+            const response = await axios.get(
                 process.env.NEXT_PUBLIC_API_URL + "/search",
                 {
                     params: { query: searchQuery, language: "en" },
                 }
             );
-            return results.data.results;
+
+            setResponseStati((prev) => ({
+                ...prev,
+                searchResults: response.status,
+            }));
+
+            return response.data.results;
         } catch (error) {
             throw error;
         }
@@ -124,10 +149,16 @@ const SearchBar = ({
                 />
                 <button
                     className={styles.submit_button}
-                    disabled={loading}
+                    disabled={
+                        loading ||
+                        !searchQuery.match("^[a-zA-Z0-9]*$") ||
+                        searchQuery.length < 3
+                    }
                     onClick={() => fetchData()}
                     style={
-                        loading
+                        loading ||
+                        !searchQuery.match(/^[a-zA-Z\s]+[0-9]*$/) ||
+                        searchQuery.length < 3
                             ? { opacity: 0.6, cursor: "not-allowed" }
                             : { opacity: 1, cursor: "pointer" }
                     }
