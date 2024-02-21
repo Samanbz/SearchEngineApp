@@ -35,7 +35,6 @@ const SearchBar = ({
     const [finalStatus, setFinalStatus] = useState("");
 
     useEffect(() => {
-        console.log(responseStati);
         setFinalStatus(interpretResponseStati());
     }, [responseStati]);
 
@@ -104,7 +103,11 @@ const SearchBar = ({
             const namedEntities = await fetchNamedEntities(results);
             validate.namedEntities(namedEntities);
         } catch (error) {
-            // setFinalStatus(interpretResponseStati());
+            setResponseStati({
+                searchResults: 503,
+                summary: 503,
+                namedEntities: 503,
+            });
         }
 
         setLoading(false);
@@ -114,23 +117,19 @@ const SearchBar = ({
         const headlines = results.map((result) => result.article.title);
 
         try {
-            // const response = await axios.post(
-            //     process.env.NEXT_PUBLIC_API_URL + "/summary",
-            //     {
-            //         param: { language: "en" },
-            //         headlines: headlines,
-            //         topic: searchQuery,
-            //     }
-            // );
+            const response = await axios.post(
+                process.env.NEXT_PUBLIC_API_URL + "/summary",
+                {
+                    param: { language: "en" },
+                    headlines: headlines,
+                    topic: searchQuery,
+                }
+            );
 
-            // const summary = response.data.summary;
-            const summary =
-                "this happened that happened that happened this and that happened i dont know.";
-            // if (!summary)
-            //     setResponseStati((prev) => ({ ...prev, summary: 404 }));
+            const summary = response.data.summary;
 
             setSearchQuery("");
-            setResponseStati((prev) => ({ ...prev, summary: 200 })); // TODO: 2change later
+            setResponseStati((prev) => ({ ...prev, summary: response.status }));
 
             return summary;
         } catch (error) {
@@ -158,6 +157,7 @@ const SearchBar = ({
             }));
             return response.data.results;
         } catch (error) {
+            console.log(error);
             let statusCode = isHTTPError(error) || 0;
             setResponseStati((prev) => ({
                 ...prev,
