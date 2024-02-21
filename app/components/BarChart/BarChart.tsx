@@ -85,7 +85,7 @@ const BarChartComponent = ({
                     align={isPortrait ? "center" : "right"}
                     wrapperStyle={
                         isPortrait
-                            ? { paddingTop: "60px" }
+                            ? { paddingTop: "100px" }
                             : {
                                   paddingLeft: "10px",
                               }

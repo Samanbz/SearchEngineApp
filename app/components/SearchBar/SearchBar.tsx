@@ -6,7 +6,12 @@ import SearchResult from "../types/SearchResult";
 import MeshBackground from "../MeshBackground/MeshBackground";
 import NamedEntity from "../types/NamedEntity";
 import { motion } from "framer-motion";
+import FastAPIError from "../types/FastAPIError";
+import HTTPError from "../types/HTTPError";
 
+const isHTTPError = (error: any): number => {
+    return error.response && error.response.status;
+};
 const SearchBar = ({
     setSearchResults,
     setNamedEntities,
@@ -30,6 +35,7 @@ const SearchBar = ({
     const [finalStatus, setFinalStatus] = useState("");
 
     useEffect(() => {
+        console.log(responseStati);
         setFinalStatus(interpretResponseStati());
     }, [responseStati]);
 
@@ -127,10 +133,11 @@ const SearchBar = ({
             setResponseStati((prev) => ({ ...prev, summary: 200 })); // TODO: 2change later
 
             return summary;
-        } catch (error: any) {
+        } catch (error) {
+            let statusCode = isHTTPError(error) || 0;
             setResponseStati((prev) => ({
                 ...prev,
-                summary: error.response.status || 503,
+                summary: statusCode || 503,
             }));
             throw error;
         }
@@ -150,10 +157,11 @@ const SearchBar = ({
                 searchResults: response.status,
             }));
             return response.data.results;
-        } catch (error: any) {
+        } catch (error) {
+            let statusCode = isHTTPError(error) || 0;
             setResponseStati((prev) => ({
                 ...prev,
-                searchResults: error.response.status || 503,
+                searchResults: statusCode || 503,
             }));
             throw error;
         }
@@ -185,10 +193,11 @@ const SearchBar = ({
             return namedEntities.length > 30
                 ? namedEntities.slice(0, 30)
                 : namedEntities;
-        } catch (error: any) {
+        } catch (error) {
+            let statusCode = isHTTPError(error) || 0;
             setResponseStati((prev) => ({
                 ...prev,
-                searchResults: error.response.status || 503,
+                namedEntities: statusCode || 503,
             }));
             throw error;
         }
@@ -231,7 +240,8 @@ const SearchBar = ({
         if (ResponseConditions.NoResults) {
             errorMessage = "No results found for this query, try another one.";
         } else if (ResponseConditions.ServerError) {
-            errorMessage = "Server is currently down, please try again later.";
+            errorMessage =
+                "Either the server is down, or you don't have permission to access.";
         } else if (ResponseConditions.NoAnalysis) {
             errorMessage = "No analysis could be made on the search results.";
         } else if (ResponseConditions.LimitReached) {

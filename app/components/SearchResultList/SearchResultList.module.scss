@@ -1,7 +1,7 @@
 @import "../utils/breakpoints.scss";
 
 .container {
-    @include respond(width, 85%, 97%);
+    @include respond(width, 90%, 97%);
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -17,6 +17,11 @@
     overflow: visible;
     margin-bottom: 20%;
     position: relative;
+
+    @include breakpoint(prt) {
+        height: 500px;
+        margin-bottom: 10%;
+    }
 }
 
 .loader_container {
@@ -72,12 +77,12 @@
 }
 
 .summary_header {
-    font-size: 2.7rem;
+    @include respond(font-size, 2.2rem, 2.4rem, 2.5rem, 2.7rem);
     font-weight: 800;
 }
 
 .summary {
     margin-top: 1%;
-    // font-size: 1.5rem;
+    @include respond(font-size, 1.3rem, 1.4rem, 1.3rem, 1.4rem);
     font-weight: 400;
 }
