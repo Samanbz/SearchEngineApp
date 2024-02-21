@@ -1,5 +1,7 @@
+@import "../utils/breakpoints.scss";
+
 .container {
-    width: 97%;
+    @include respond(width, 85%, 97%);
     display: flex;
     align-items: center;
     flex-direction: column;

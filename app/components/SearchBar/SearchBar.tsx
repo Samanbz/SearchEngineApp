@@ -8,14 +8,12 @@ import NamedEntity from "../types/NamedEntity";
 import { motion } from "framer-motion";
 
 const SearchBar = ({
-    searchResults,
     setSearchResults,
     setNamedEntities,
     setSummary,
     setLoading,
     loading,
 }: {
-    searchResults: SearchResult[];
     setSearchResults: Dispatch<SetStateAction<SearchResult[]>>;
     setNamedEntities: Dispatch<SetStateAction<NamedEntity[]>>;
     setSummary: Dispatch<SetStateAction<string>>;
@@ -129,7 +127,7 @@ const SearchBar = ({
             setResponseStati((prev) => ({ ...prev, summary: 200 })); // TODO: 2change later
 
             return summary;
-        } catch (error) {
+        } catch (error: any) {
             setResponseStati((prev) => ({
                 ...prev,
                 summary: error.response.status || 503,
@@ -152,7 +150,7 @@ const SearchBar = ({
                 searchResults: response.status,
             }));
             return response.data.results;
-        } catch (error) {
+        } catch (error: any) {
             setResponseStati((prev) => ({
                 ...prev,
                 searchResults: error.response.status || 503,
@@ -187,7 +185,7 @@ const SearchBar = ({
             return namedEntities.length > 30
                 ? namedEntities.slice(0, 30)
                 : namedEntities;
-        } catch (error) {
+        } catch (error: any) {
             setResponseStati((prev) => ({
                 ...prev,
                 searchResults: error.response.status || 503,

@@ -13,11 +13,16 @@ import {
     Cell,
 } from "recharts";
 import styles from "./BarChart.module.scss";
+import useBreakpoint from "../utils/useBreakpoints";
+import useWindowDimensions from "../utils/useWindowDimensions";
 const BarChartComponent = ({
     data,
 }: {
     data: { name: string; label: string; frequency: number }[];
 }) => {
+    const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+    const isPortrait = windowHeight > windowWidth;
+
     const colors: { [key: string]: string } = {
         CARDINAL: "#0077b6",
         DATE: "#06d6a0",
@@ -75,12 +80,16 @@ const BarChartComponent = ({
                             value: label,
                             color: colors[label],
                         }))}
-                    verticalAlign="top"
-                    layout="vertical"
-                    align="right"
-                    wrapperStyle={{
-                        paddingLeft: "10px",
-                    }}
+                    verticalAlign={isPortrait ? "bottom" : "top"}
+                    layout={isPortrait ? "horizontal" : "vertical"}
+                    align={isPortrait ? "center" : "right"}
+                    wrapperStyle={
+                        isPortrait
+                            ? { paddingTop: "60px" }
+                            : {
+                                  paddingLeft: "10px",
+                              }
+                    }
                 />
                 <Tooltip
                     contentStyle={{

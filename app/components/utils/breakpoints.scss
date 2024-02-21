@@ -1,7 +1,7 @@
 $breakpoints: (
     sm: (
-        min: 576px,
-        max: 575.98px,
+        min: 600px,
+        max: 599.98px,
     ),
     md: (
         min: 1200px,
@@ -9,12 +9,17 @@ $breakpoints: (
     ),
 
     lg: (
-        min: 1600px,
+        min: 1600,
         max: 1599.98px,
     ),
     xl: (
-        min: 10000px,
-        max: 9999.98px,
+        min: 2000,
+        max: 1999px,
+    ),
+
+    xxl: (
+        min: 100000px,
+        max: 99999px,
     ),
     prt: (),
 );
@@ -46,20 +51,30 @@ $breakpoints: (
                 @content;
             }
         } @else {
-            @media (max-width: $breakpoint-max) {
-                @content;
+            @if $breakpoint == sm {
+                @media (max-width: $breakpoint-max) and (orientation: portrait) {
+                    @content;
+                }
+            } @else {
+                @media (max-width: $breakpoint-max) {
+                    @content;
+                }
             }
         }
     }
 }
 
-@mixin respond($property, $sm, $md: $sm, $lg: $md, $xl: $lg) {
+@mixin respond($property, $sm, $md: $sm, $lg: $md, $xl: $lg, $xxl: $xl) {
+    @include breakpoint(xxl) {
+        #{$property}: $xxl;
+    }
     @include breakpoint(xl) {
         #{$property}: $xl;
     }
     @include breakpoint(lg) {
         #{$property}: $lg;
     }
+
     @include breakpoint(md) {
         #{$property}: $md;
     }
