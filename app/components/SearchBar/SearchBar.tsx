@@ -8,6 +8,7 @@ import NamedEntity from "../types/NamedEntity";
 import { motion } from "framer-motion";
 import FastAPIError from "../types/FastAPIError";
 import HTTPError from "../types/HTTPError";
+import LanguageToggle from "../LanguageToggle/LanguageToggle";
 
 const isHTTPError = (error: any): number => {
     return error.response && error.response.status;
@@ -18,12 +19,16 @@ const SearchBar = ({
     setSummary,
     setLoading,
     loading,
+    language,
+    setLanguage,
 }: {
     setSearchResults: Dispatch<SetStateAction<SearchResult[]>>;
     setNamedEntities: Dispatch<SetStateAction<NamedEntity[]>>;
     setSummary: Dispatch<SetStateAction<string>>;
     setLoading: Dispatch<SetStateAction<boolean>>;
     loading: boolean;
+    language: string;
+    setLanguage: Dispatch<SetStateAction<string>>;
 }) => {
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -35,6 +40,7 @@ const SearchBar = ({
     const [finalStatus, setFinalStatus] = useState("");
 
     useEffect(() => {
+        console.log(responseStati);
         setFinalStatus(interpretResponseStati());
     }, [responseStati]);
 
@@ -108,6 +114,7 @@ const SearchBar = ({
                 summary: 503,
                 namedEntities: 503,
             });
+            console.log(error);
         }
 
         setLoading(false);
@@ -118,9 +125,10 @@ const SearchBar = ({
 
         try {
             const response = await axios.post(
-                process.env.NEXT_PUBLIC_API_URL + "/summary",
+                process.env.NEXT_PUBLIC_API_URL +
+                    "/summary?language=" +
+                    language,
                 {
-                    param: { language: "en" },
                     headlines: headlines,
                     topic: searchQuery,
                 }
@@ -147,7 +155,7 @@ const SearchBar = ({
             const response = await axios.get(
                 process.env.NEXT_PUBLIC_API_URL + "/search",
                 {
-                    params: { query: searchQuery, language: "en" },
+                    params: { query: searchQuery, language: language },
                 }
             );
 
@@ -172,9 +180,10 @@ const SearchBar = ({
         const top_urls = urls.slice(0, 7);
         try {
             const response = await axios.post(
-                process.env.NEXT_PUBLIC_API_URL + "/analysis",
+                process.env.NEXT_PUBLIC_API_URL +
+                    "/analysis?language=" +
+                    language,
                 {
-                    param: { language: "en" },
                     urls: top_urls,
                 }
             );
@@ -253,6 +262,11 @@ const SearchBar = ({
     };
     return (
         <div className={styles.container}>
+            <LanguageToggle
+                loading={loading}
+                language={language}
+                setLanguage={setLanguage}
+            />
             <div
                 className={styles.bg_container}
                 style={

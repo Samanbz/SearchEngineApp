@@ -1,5 +1,5 @@
 "use client";
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import SearchResult from "../types/SearchResult";
 import SearchResultItem from "../SearchResultItem/SearchResultItem";
 import styles from "./SearchResultList.module.scss";
@@ -31,13 +31,6 @@ const SearchResultList = ({
                 </motion.h1>
 
                 <h2 className={styles.summary}>
-                    <motion.span
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: summary ? 1 : 0 }}
-                        transition={{ delay: summary ? 1 : 0 }}
-                    >
-                        Ok so basically,{" "}
-                    </motion.span>
                     {summary
                         .replaceAll('"', "")
                         .split(" ")

@@ -11,6 +11,8 @@ export default function Home() {
     const [namedEntities, setNamedEntities] = useState([] as NamedEntity[]);
     const [summary, setSummary] = useState("");
     const [loading, setLoading] = useState(false);
+    const [language, setLanguage] = useState("en");
+
     return (
         <div className={styles.container}>
             <SearchBar
@@ -19,6 +21,8 @@ export default function Home() {
                 setSummary={setSummary}
                 setLoading={setLoading}
                 loading={loading}
+                language={language}
+                setLanguage={setLanguage}
             />
 
             <SearchResultList

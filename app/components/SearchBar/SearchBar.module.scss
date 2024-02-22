@@ -94,7 +94,8 @@
 .submit_button {
     all: unset;
     cursor: pointer;
-    @include respond(font-size, 1.2rem, 1.6rem, 1.6rem, 1.7rem, 2rem);
+    @include respond(font-size, 1.2age
+    rem, 1.6rem, 1.6rem, 1.7rem, 2rem);
     @include respond(
         padding,
         0.4rem 0.9rem,
